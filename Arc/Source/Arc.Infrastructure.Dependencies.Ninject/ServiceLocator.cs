@@ -88,7 +88,17 @@ namespace Arc.Infrastructure.Dependencies.Ninject
             configuration.Load(this);
         }
 
-        /// <summary>
+    	/// <summary>
+    	/// Resolves all services for given type
+    	/// </summary>
+    	/// <typeparam name="TService">The type of the service.</typeparam>
+    	/// <returns></returns>
+    	public IEnumerable<TService> ResolveAll<TService>()
+    	{
+    		return Kernel.GetAll<TService>();
+    	}
+
+    	/// <summary>
         /// Resolves requested service.
         /// </summary>
         /// <typeparam name="TService">The type of the service.</typeparam>

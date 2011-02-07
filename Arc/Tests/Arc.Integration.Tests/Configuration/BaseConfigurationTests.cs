@@ -1,3 +1,4 @@
+using System.Linq;
 using Arc.Infrastructure.Configuration;
 using Arc.Infrastructure.Configuration.Dependencies;
 using Arc.Infrastructure.Data;
@@ -59,6 +60,7 @@ namespace Arc.Integration.Tests.Configuration
                 .Apply(new RegisterServicesConvention());
 
             Assert.That(ServiceLocator.Resolve<IService>(), Is.Not.Null);
+        	Assert.That(ServiceLocator.ResolveAll<IService>().Any(), Is.True);
         }
 
         [Test]
