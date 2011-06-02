@@ -40,7 +40,6 @@ namespace Arc.Infrastructure.Data.NHibernate
         {
             NHConfiguration = configuration;
         }
-
         
         /// <summary>
         /// Creates default data configuration.
@@ -66,7 +65,6 @@ namespace Arc.Infrastructure.Data.NHibernate
                                                   });
             return Default(configuration);
         }
-
 
         /// <summary>
         /// Gets or sets the NHibernate configuration.
@@ -108,8 +106,6 @@ namespace Arc.Infrastructure.Data.NHibernate
                 Requested.Service(typeof(INHibernateRepository<>))
                     .IsImplementedBy(typeof(Repository<>))
             );
-
-            
         }
 
         private void ConfigureNHibernate(IServiceLocator locator)

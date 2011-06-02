@@ -45,6 +45,5 @@ namespace Arc.Infrastructure.Configuration
             }
             return this;
         }
-
     }
 }

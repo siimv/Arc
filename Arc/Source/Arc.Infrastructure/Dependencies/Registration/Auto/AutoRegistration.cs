@@ -28,16 +28,14 @@ namespace Arc.Infrastructure.Dependencies.Registration.Auto
     /// </summary>
     public class AutoRegistration : IConfiguration<IServiceLocator>, IBindingSyntax, IPickingSyntax
     {
-        private ITypeRegistrationStrategy _strategy;
-        private readonly Assembly[] _assemblies;
-        private Func<Type, bool> _criteria;
-
+    	private readonly Assembly[] _assemblies;
+    	private ITypeRegistrationStrategy _strategy;
+    	private Func<Type, bool> _criteria;
 
         private AutoRegistration(Assembly[] assemblies)
         {
             _assemblies = assemblies;
         }
-
 
         /// <summary>
         /// ServiceLocator for the specified assemblies.
@@ -64,7 +62,6 @@ namespace Arc.Infrastructure.Dependencies.Registration.Auto
             return new AutoRegistration(assemblies.ToArray());
         }
 
-
         /// <summary>
         /// Picks types by the specified criteria.
         /// </summary>
@@ -84,7 +81,6 @@ namespace Arc.Infrastructure.Dependencies.Registration.Auto
         {
             get { return Pick(x => !x.IsInterface && !x.IsAbstract); }
         }
-
 
         /// <summary>
         /// Binds to the specified criteria.
@@ -107,6 +103,17 @@ namespace Arc.Infrastructure.Dependencies.Registration.Auto
             _strategy = new RegisterTypeToFirstMatchStrategy(criteria);
             return this;
         }
+
+		/// <summary>
+		/// Binds all to the specified criteria.
+		/// </summary>
+		/// <param name="criteria">The criteria. (interface)</param>
+		/// <returns></returns>
+		public AutoRegistration BindToInterfaces(Func<Type, bool> criteria)
+		{
+			_strategy = new RegisterTypeToAllMatchStrategy(criteria);
+			return this;
+		}
 
         /// <summary>
         /// Binds to self.
@@ -137,7 +144,6 @@ namespace Arc.Infrastructure.Dependencies.Registration.Auto
             _strategy.Scope = lifeStyle;
             return this;
         }
-
 
         /// <summary>
         /// Loads configuration to service locator.

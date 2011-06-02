@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Arc.Domain.Dsl;
 using Arc.Infrastructure.Configuration;
@@ -97,6 +98,11 @@ namespace Arc.Infrastructure.Dependencies.Ninject
     	{
     		return Kernel.GetAll<TService>();
     	}
+
+		public IEnumerable ResolveAll(Type service)
+		{
+			return Kernel.GetAll(service);
+		}
 
     	/// <summary>
         /// Resolves requested service.
