@@ -9,9 +9,9 @@ namespace Arc.Unit.Tests.Infrastructure.Utilities
     public class FindTests
     {
         private const string ValidTypeName = "Arc.Unit.Tests.Fakes.Entities.ServiceImpl, Arc.Unit.Tests";
+        private const string ValidTypeNameWithGenericInterface = "Arc.Unit.Tests.Fakes.Entities.ServiceExecutorImpl, Arc.Unit.Tests";
         private const string InvalidTypeName = "Arc.Unit.Tests.Fakes.Entities.Service, Arc.Unit.Tests";
         private const string TypeWithoutInterfaceName = "Arc.Unit.Tests.Fakes.Entities.Person, Arc.Unit.Tests";
-
 
         [Test]
         public void Should_find_specified_type()
@@ -31,6 +31,15 @@ namespace Arc.Unit.Tests.Infrastructure.Utilities
             Assert.That(actual, Is.EqualTo(typeof(ServiceImpl)));
         }
 
+    	[Test]
+    	public void Should_find_specified_type_with_generic_interface()
+    	{
+			var actual = Find.TypeWithInterface<IServiceExecutor<IService>>(ValidTypeNameWithGenericInterface);
+
+			Assert.That(actual, Is.Not.Null);
+			Assert.That(actual, Is.EqualTo(typeof(ServiceExecutorImpl)));
+    	}
+
         [Test]
         [ExpectedException(typeof (ArgumentException))]
         public void Should_thorw_argument_exception_when_type_is_not_found()
@@ -44,5 +53,12 @@ namespace Arc.Unit.Tests.Infrastructure.Utilities
         {
             Find.TypeWithInterface<IService>(TypeWithoutInterfaceName);
         }
+
+		[Test]
+		[ExpectedException(typeof(ArgumentException))]
+		public void Should_throw_argument_exception_when_type_doesnt_implemet_specified_generic_interface()
+		{
+			Find.TypeWithInterface<IServiceExecutor<IService>>(TypeWithoutInterfaceName);
+		}
     }
 }
