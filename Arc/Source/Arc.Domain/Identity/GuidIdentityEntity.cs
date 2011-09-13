@@ -77,7 +77,12 @@ namespace Arc.Domain.Identity
             return Id.GetHashCode();
         }
 
-        /// <summary>
+		public virtual Type GetUnproxiedType()
+    	{
+    		return GetType();
+    	}
+
+    	/// <summary>
         /// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
         /// </summary>
         /// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>.</param>
