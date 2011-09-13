@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Arc.Infrastructure.Configuration;
 using Arc.Infrastructure.Dependencies.Registration;
 
@@ -80,6 +81,11 @@ namespace Arc.Infrastructure.Dependencies
 		public static IEnumerable<TService> ResolveAll<TService>()
 		{
 			return InnerServiceLocator.ResolveAll<TService>();
+		}
+
+		public static IEnumerable<object> ResolveAll(Type type)
+		{
+			return InnerServiceLocator.ResolveAll(type).Cast<object>();
 		}
 
         /// <summary>
