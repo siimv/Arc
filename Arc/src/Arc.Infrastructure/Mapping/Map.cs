@@ -17,6 +17,8 @@
 #endregion
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Arc.Infrastructure.Dependencies;
 
 namespace Arc.Infrastructure.Mapping
@@ -31,6 +33,16 @@ namespace Arc.Infrastructure.Mapping
         public static IMapToSyntax From(object source, Type type)
         {
             return new MappingOfUnknownType(source, type, ServiceLocator.Resolve<IMapper>);
+        }
+
+        public static IMapCollectionToSyntax CollectionOf<TSource>(IEnumerable<TSource> sources)
+        {
+            return new MappingOfGenericTypeCollection<TSource>(sources, ServiceLocator.Resolve<IMapper>);
+        }
+
+        public static IMapCollectionToSyntax CollectionOf(IEnumerable sources, Type type)
+        {
+            return new MappingOfUnknownTypeCollection(sources, type, ServiceLocator.Resolve<IMapper>);
         }
     }
 }

@@ -18,8 +18,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Arc.Infrastructure.Configuration;
+using Arc.Domain.Dsl;
 
 namespace Arc.Infrastructure.Dependencies.Registration.Auto
 {
@@ -31,7 +33,6 @@ namespace Arc.Infrastructure.Dependencies.Registration.Auto
         private ITypeRegistrationStrategy _strategy;
         private readonly Assembly[] _assemblies;
         private Func<Type, bool> _criteria;
-
 
         private AutoRegistration(Assembly[] assemblies)
         {
@@ -57,10 +58,7 @@ namespace Arc.Infrastructure.Dependencies.Registration.Auto
         public static IPickingSyntax For(params string[] assemblyNames)
         {
             var assemblies = new List<Assembly>();
-            foreach (var name in assemblyNames)
-            {
-                assemblies.Add(Assembly.Load(name));
-            }
+            assemblyNames.Each(name => assemblies.Add(Assembly.Load(name)));
             return new AutoRegistration(assemblies.ToArray());
         }
 
@@ -108,6 +106,17 @@ namespace Arc.Infrastructure.Dependencies.Registration.Auto
             return this;
         }
 
+		/// <summary>
+		/// Binds all to the specified criteria.
+		/// </summary>
+		/// <param name="criteria">The criteria. (interface)</param>
+		/// <returns></returns>
+		public AutoRegistration BindToInterfaces(Func<Type, bool> criteria)
+		{
+			_strategy = new RegisterTypeToAllMatchStrategy(criteria);
+			return this;
+		}
+
         /// <summary>
         /// Binds to self.
         /// </summary>
@@ -153,12 +162,9 @@ namespace Arc.Infrastructure.Dependencies.Registration.Auto
 
         private void RegisterTypes(Assembly assembly, IServiceLocator locator)
         {
-            foreach (var type in assembly.GetTypes())
-            {
-                if (IsConcreteTypeAndMatchForCriteria(type)) continue;
-
-                _strategy.Register(type, locator);
-            }
+            assembly.GetTypes()
+                .Where(type => !IsConcreteTypeAndMatchForCriteria(type))
+                .Each(type => _strategy.Register(type, locator));
         }
 
         private bool IsConcreteTypeAndMatchForCriteria(Type type)

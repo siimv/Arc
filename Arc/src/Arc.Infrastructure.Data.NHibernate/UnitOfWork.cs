@@ -44,7 +44,7 @@ namespace Arc.Infrastructure.Data.NHibernate
         /// Gets or sets the real session.
         /// </summary>
         /// <value>The real session.</value>
-        public ISession RealSession { get; set; }
+        public ISession RealSession { get; private set; }
 
         /// <summary>
         /// Gets the NHibernate session.
@@ -74,6 +74,14 @@ namespace Arc.Infrastructure.Data.NHibernate
         public ITransaction BeginTransaction()
         {
             return new Transaction(RealSession.BeginTransaction());
+        }
+
+        /// <summary>
+        /// Flushes changes to database.
+        /// </summary>
+        public void Flush()
+        {
+            RealSession.Flush();
         }
 
         /// <summary>

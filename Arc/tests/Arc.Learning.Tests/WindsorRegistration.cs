@@ -18,7 +18,7 @@ namespace Arc.Learning.Tests
             var container = new WindsorContainer();
 
             ComponentRegistrationExtensions.Kernel = container.Kernel;
-            container.AddFacility("factory.support", new FactorySupportFacility());
+			container.AddFacility<FactorySupportFacility>();
 
             container.Register(
                 Component.For<IObjectFactory>()
@@ -29,12 +29,10 @@ namespace Arc.Learning.Tests
                     .LifeStyle.Transient
                 );
 
-
             var firstCreatedObject = container.Resolve<ICreatedObject>();
             var secondCreatedObject = container.Resolve<ICreatedObject>();
 
             Assert.That(firstCreatedObject, Is.Not.SameAs(secondCreatedObject));
-
         }
 
         [Test]
@@ -43,7 +41,7 @@ namespace Arc.Learning.Tests
             var container = new WindsorContainer();
 
             container.Register(
-                AllTypes.Pick().FromAssembly(Assembly.GetExecutingAssembly())
+                AllTypes.FromAssembly(Assembly.GetExecutingAssembly()).Pick()
                 .If(t => t.FullName == "").WithService.FirstInterface());
         }
 
@@ -62,7 +60,7 @@ namespace Arc.Learning.Tests
     {
         public static IKernel Kernel { private get; set; }
 
-        public static ComponentRegistration<T> FactoryMethod<T, S>(this ComponentRegistration<T> reg, Func<S> factory) where S : T
+        public static ComponentRegistration<T> FactoryMethod<T, S>(this ComponentRegistration<T> reg, Func<S> factory) where S : T where T : class
         {
             var factoryName = typeof(GenericFactory<S>).FullName;
             Kernel.Register(Component.For<GenericFactory<S>>().Named(factoryName).Instance(new GenericFactory<S>(factory)));
@@ -70,7 +68,7 @@ namespace Arc.Learning.Tests
             return reg;
         }
 
-        public static ComponentRegistration<T> FactoryMethod<T, S>(this ComponentRegistration<T> reg, Func<IKernel, S> factory) where S : T
+        public static ComponentRegistration<T> FactoryMethod<T, S>(this ComponentRegistration<T> reg, Func<IKernel, S> factory) where S : T where T : class
         {
             var factoryName = typeof(GenericFactoryWithKernel<S>).FullName;
             Kernel.Register(Component.For<GenericFactoryWithKernel<S>>().Named(factoryName).Instance(new GenericFactoryWithKernel<S>(factory, Kernel)));

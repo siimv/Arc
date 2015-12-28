@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Arc.Domain.Dsl;
 using Arc.Infrastructure.Configuration;
@@ -49,9 +50,7 @@ namespace Arc.Infrastructure.Dependencies.Ninject
             Kernel = kernel;
         }
 
-
-        internal IKernel Kernel { get; set; }
-
+        internal IKernel Kernel { get; private set; }
 
         /// <summary>
         /// Loads the specified module by name.
@@ -87,6 +86,21 @@ namespace Arc.Infrastructure.Dependencies.Ninject
         {
             configuration.Load(this);
         }
+
+		/// <summary>
+		/// Resolves all services for given type
+		/// </summary>
+		/// <typeparam name="TService">The type of the service.</typeparam>
+		/// <returns></returns>
+		public IEnumerable<TService> ResolveAll<TService>()
+		{
+			return Kernel.GetAll<TService>();
+		}
+
+		public IEnumerable ResolveAll(Type service)
+		{
+			return Kernel.GetAll(service);
+		}
 
         /// <summary>
         /// Resolves requested service.

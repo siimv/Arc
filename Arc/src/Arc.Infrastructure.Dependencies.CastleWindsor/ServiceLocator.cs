@@ -17,6 +17,8 @@
 #endregion
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Arc.Infrastructure.Configuration;
 using Arc.Infrastructure.Dependencies.CastleWindsor.Extensions;
 using Arc.Infrastructure.Dependencies.CastleWindsor.Registration;
@@ -46,12 +48,12 @@ namespace Arc.Infrastructure.Dependencies.CastleWindsor
         public ServiceLocator(IWindsorContainer container)
         {
             ComponentRegistrationExtensions.Kernel = container.Kernel;
-            container.AddFacility("factory.support", new FactorySupportFacility());
+			container.AddFacility<FactorySupportFacility>();
 
             Container = container;
         }
 
-        internal IWindsorContainer Container { get; set; }
+        internal IWindsorContainer Container { get; private set; }
 
         /// <summary>
         /// Loads the specified module by name.
@@ -88,7 +90,22 @@ namespace Arc.Infrastructure.Dependencies.CastleWindsor
             configuration.Load(this);
         }
 
-        /// <summary>
+		/// <summary>
+		/// Resolves all services for given type
+		/// </summary>
+		/// <typeparam name="TService">The type of the service.</typeparam>
+		/// <returns></returns>
+		public IEnumerable<TService> ResolveAll<TService>()
+		{
+			return Container.ResolveAll<TService>();
+		}
+
+    	public IEnumerable ResolveAll(Type service)
+    	{
+    		return Container.ResolveAll(service);
+    	}
+
+    	/// <summary>
         /// Resolves requested service.
         /// </summary>
         /// <typeparam name="TService">The type of the service.</typeparam>

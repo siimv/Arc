@@ -22,14 +22,14 @@ namespace Arc.Infrastructure.Dependencies.Ninject.Registration
 {
     internal abstract class BaseRegistrationStrategy : IRegistrationStrategy
     {
-        public BaseRegistrationStrategy(IRegistration registration, ServiceLocator serviceLocator)
+    	protected BaseRegistrationStrategy(IRegistration registration, ServiceLocator serviceLocator)
         {
             ServiceLocator = serviceLocator;
             Registration = registration;
         }
 
-        protected ServiceLocator ServiceLocator { get; set; }
-        protected IRegistration Registration { get; set; }
+        protected ServiceLocator ServiceLocator { get; private set; }
+        protected IRegistration Registration { get; private set; }
         
         public abstract void Register();
     }

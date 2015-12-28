@@ -34,7 +34,7 @@ namespace Arc.Infrastructure.Configuration.Conventions
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceLocatorConvention"/> class.
         /// </summary>
-        public ServiceLocatorConvention()
+        protected ServiceLocatorConvention()
         {
             Configurations = new List<AutoRegistration>();
         }
@@ -70,7 +70,7 @@ namespace Arc.Infrastructure.Configuration.Conventions
         public void Apply(IServiceLocator handler)
         {
             DefineRules();
-            Configurations.Each(configuration => handler.Load(configuration)); 
+            Configurations.Each(handler.Load); 
         }
 
         /// <summary>

@@ -2,6 +2,7 @@ using System.Collections;
 using Arc.Domain.Identity;
 using Arc.Unit.Tests.Fakes.Entities;
 using Arc.Unit.Tests.Fakes.Identity;
+using Arc.Unit.Tests.Helpers;
 using Castle.DynamicProxy;
 using NUnit.Framework;
 
@@ -24,7 +25,7 @@ namespace Arc.Unit.Tests.Domain.Identity
         [Test]
         public void Integer_based_entities_should_have_identity()
         {
-            var expectedIdentity = 1;
+            const int expectedIdentity = 1;
             
             var target = CreateSUT(expectedIdentity);
 
@@ -151,25 +152,21 @@ namespace Arc.Unit.Tests.Domain.Identity
             var person = new Person(1);
             var organization = new Organization(1);
 
-            var hashtable = new Hashtable();
-
-            hashtable.Add(person, "Person");
-            hashtable.Add(organization, "Organization");
+            var hashtable = new Hashtable {{person, "Person"}, {organization, "Organization"}};
 
             Assert.That(hashtable[person], Is.EqualTo("Person"));
             Assert.That(hashtable[organization], Is.EqualTo("Organization"));
         }
 
         [Test]
-        [Ignore("Needs reflection")]
         public void Two_integer_based_proxies_should_be_equal()
         {
             var generator = new ProxyGenerator();
             var first = (Person)generator.CreateClassProxy(typeof(Person), new ProxyGenerationOptions());
-            //first.SetValueTo("Id", 1);
+            first.SetValueTo("Id", 1);
 
             var second = (Person) generator.CreateClassProxy(typeof(Person), new ProxyGenerationOptions());
-            //second.SetValueTo("Id", 1);
+            second.SetValueTo("Id", 1);
 
             Assert.That(first, Is.EqualTo(second));
         }

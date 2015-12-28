@@ -17,6 +17,8 @@
 #endregion
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Arc.Infrastructure.Configuration;
 using Arc.Infrastructure.Dependencies.Registration;
 using Arc.Infrastructure.Dependencies.StructureMap.Registration;
@@ -47,7 +49,7 @@ namespace Arc.Infrastructure.Dependencies.StructureMap
             Container = container;
         }
 
-        internal IContainer Container { get; set; }
+        internal IContainer Container { get; private set; }
 
         /// <summary>
         /// Loads the specified module by name.
@@ -83,6 +85,21 @@ namespace Arc.Infrastructure.Dependencies.StructureMap
         {
             configuration.Load(this);
         }
+
+		/// <summary>
+		/// Resolves all services for given type
+		/// </summary>
+		/// <typeparam name="TService">The type of the service.</typeparam>
+		/// <returns></returns>
+		public IEnumerable<TService> ResolveAll<TService>()
+		{
+			return Container.GetAllInstances<TService>();
+		}
+
+		public IEnumerable ResolveAll(Type service)
+		{
+			return Container.GetAllInstances(service);
+		}
 
         /// <summary>
         /// Resolves requested service.
